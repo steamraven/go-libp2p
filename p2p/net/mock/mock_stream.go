@@ -109,7 +109,7 @@ func (s *stream) SetProtocol(proto protocol.ID) {
 	s.protocol.Store(proto)
 }
 
-func (s *stream) Close() error {
+func (s *stream) CloseWrite() error {
 	select {
 	case s.close <- struct{}{}:
 	default:
@@ -119,6 +119,15 @@ func (s *stream) Close() error {
 		return s.writeErr
 	}
 	return nil
+}
+
+func (s *stream) CloseRead() error {
+	return s.read.CloseWithError(ErrClosed)
+}
+
+func (s *stream) Close() error {
+	s.CloseRead()
+	return s.CloseWrite()
 }
 
 func (s *stream) Reset() error {

@@ -2,7 +2,6 @@ package identify
 
 import (
 	"github.com/libp2p/go-libp2p-core/event"
-	"github.com/libp2p/go-libp2p-core/helpers"
 	"github.com/libp2p/go-libp2p-core/network"
 	"github.com/libp2p/go-libp2p-core/peer"
 	"github.com/libp2p/go-libp2p-core/protocol"
@@ -26,7 +25,7 @@ func (ids *IDService) deltaHandler(s network.Stream) {
 		return
 	}
 
-	defer helpers.FullClose(s)
+	defer s.Close()
 
 	log.Debugf("%s received message from %s %s", s.Protocol(), c.RemotePeer(), c.RemoteMultiaddr())
 
