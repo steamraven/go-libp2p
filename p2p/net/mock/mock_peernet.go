@@ -64,6 +64,9 @@ func (pn *peernet) teardown() error {
 	for _, c := range pn.allConns() {
 		c.Close()
 	}
+	for _, h := range pn.mocknet.Hosts() {
+		h.Close()
+	}
 	return pn.ps.Close()
 }
 
