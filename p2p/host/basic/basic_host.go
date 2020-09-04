@@ -1001,7 +1001,7 @@ func (h *BasicHost) Close() error {
 
 type streamWrapper struct {
 	network.Stream
-	rw io.ReadWriter
+	rw io.ReadWriteCloser
 }
 
 func (s *streamWrapper) Read(b []byte) (int, error) {
@@ -1010,4 +1010,8 @@ func (s *streamWrapper) Read(b []byte) (int, error) {
 
 func (s *streamWrapper) Write(b []byte) (int, error) {
 	return s.rw.Write(b)
+}
+
+func (s *streamWrapper) Close() error {
+	return s.rw.Close()
 }
