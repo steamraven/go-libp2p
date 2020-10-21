@@ -7,22 +7,8 @@ import (
 
 	crypto "github.com/libp2p/go-libp2p-core/crypto"
 	mplex "github.com/libp2p/go-libp2p-mplex"
-	noise "github.com/libp2p/go-libp2p-noise"
 	pstoremem "github.com/libp2p/go-libp2p-peerstore/pstoremem"
-	tls "github.com/libp2p/go-libp2p-tls"
 	yamux "github.com/libp2p/go-libp2p-yamux"
-	tcp "github.com/libp2p/go-tcp-transport"
-	ws "github.com/libp2p/go-ws-transport"
-	multiaddr "github.com/multiformats/go-multiaddr"
-)
-
-// DefaultSecurity is the default security option.
-//
-// Useful when you want to extend, but not replace, the supported transport
-// security protocols.
-var DefaultSecurity = ChainOptions(
-	Security(noise.ID, noise.New),
-	Security(tls.ID, tls.New),
 )
 
 // DefaultMuxers configures libp2p to use the stream connection multiplexers.
@@ -32,15 +18,6 @@ var DefaultSecurity = ChainOptions(
 var DefaultMuxers = ChainOptions(
 	Muxer("/yamux/1.0.0", yamux.DefaultTransport),
 	Muxer("/mplex/6.7.0", mplex.DefaultTransport),
-)
-
-// DefaultTransports are the default libp2p transports.
-//
-// Use this option when you want to *extend* the set of transports used by
-// libp2p instead of replacing them.
-var DefaultTransports = ChainOptions(
-	Transport(tcp.NewTCPTransport),
-	Transport(ws.New),
 )
 
 // DefaultPeerstore configures libp2p to use the default peerstore.
@@ -55,23 +32,6 @@ var RandomIdentity = func(cfg *Config) error {
 		return err
 	}
 	return cfg.Apply(Identity(priv))
-}
-
-// DefaultListenAddrs configures libp2p to use default listen address.
-var DefaultListenAddrs = func(cfg *Config) error {
-	defaultIP4ListenAddr, err := multiaddr.NewMultiaddr("/ip4/0.0.0.0/tcp/0")
-	if err != nil {
-		return err
-	}
-
-	defaultIP6ListenAddr, err := multiaddr.NewMultiaddr("/ip6/::/tcp/0")
-	if err != nil {
-		return err
-	}
-	return cfg.Apply(ListenAddrs(
-		defaultIP4ListenAddr,
-		defaultIP6ListenAddr,
-	))
 }
 
 // DefaultEnableRelay enables relay dialing and listening by default.
