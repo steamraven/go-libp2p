@@ -700,9 +700,10 @@ func (h *BasicHost) resolveAddrs(ctx context.Context, pi peer.AddrInfo) ([]ma.Mu
 		addr := toResolve[len(toResolve)-1]
 		toResolve = toResolve[:len(toResolve)-1]
 
+		resolved = append(resolved, addr)
+		
 		// if it's resolved, add it to the resolved list.
 		if !madns.Matches(addr) {
-			resolved = append(resolved, addr)
 			continue
 		}
 
